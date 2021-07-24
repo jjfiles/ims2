@@ -1,4 +1,5 @@
 #testing fmod integration with already constructed wrapper https://github.com/tyrylu/pyfmodex
+#Something is wrong with the path to the FMOD Engine installation, cannot test until that is fiexed...
 import pyfmodex
 
 system.pyfmodex.System()
