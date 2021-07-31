@@ -16,7 +16,8 @@ system.init(maxchannels=16)
 sounds = []
 
 #create sounds for each track
-os.chdir("B:\Code\ims2\Instrument Tracks")
+# os.chdir("B:\Code\ims2\Instrument Tracks")
+os.chdir("C:\\Users\\Jeffery\\projects\\ims2\\Instrument Tracks")
 basepath = os.getcwd()
 
 for entry in os.listdir(basepath):
@@ -29,34 +30,28 @@ for entry in os.listdir(basepath):
     )
 
 #create groups    
-group0 = system.create_channel_group("Group 0")
-group1 = system.create_channel_group("Group 1")
-group2 = system.create_channel_group("Group 2")
-group3 = system.create_channel_group("Group 3")
+groups = []
+for i in range(4):
+    groups.append(system.create_channel_group(f"Group {i}"))
 
 #master group
 groupMaster = system.master_channel_group
-groupMaster.add_group(group0, propagate_dsp_clock=False)
-groupMaster.add_group(group1, propagate_dsp_clock=False)
-groupMaster.add_group(group2, propagate_dsp_clock=False)
-groupMaster.add_group(group3, propagate_dsp_clock=False)
+for i in range(4):
+    groupMaster.add_group(groups[i], propagate_dsp_clock=False)
 
 #start the sounds together
 for idx, sound in enumerate(sounds):
     system.play_sound(
         sound, 
-        channel_group=group0 if idx < 3 
-            else group1 if (idx > 3 and idx < 7) 
-            else group2 if (idx > 7 and idx < 11) 
-            else group3
+        channel_group=groups[0] if idx < 3 
+            else groups[1] if (idx > 3 and idx < 7) 
+            else groups[2] if (idx > 7 and idx < 11) 
+            else groups[3]
     )
-print(groupMaster)
 
 #set starting volume
-group0.volume = 0.5
-group1.volume = 0.5
-group2.volume = 0.5
-group3.volume = 0.5
+for i in range(4):
+    groups[i].volume = 0.5
 
 #initialize curses
 stdscr = curses.initscr()
@@ -85,13 +80,13 @@ while True:
     try:
         keypress = stdscr.getkey()
         if keypress == "0":
-            group0.mute = not group0.mute
+            groups[0].mute = not groups[0].mute
         elif keypress == "1":
-            group1.mute = not group1.mute
+            groups[1].mute = not groups[1].mute
         elif keypress == "2":
-            group2.mute = not group2.mute
+            groups[2].mute = not groups[2].mute
         elif keypress == "3":
-            group3.mute = not group3.mute
+            groups[3].mute = not groups[3].mute
         elif keypress == "m":
             groupMaster.mute = not groupMaster.mute
         elif keypress == "q":
@@ -104,7 +99,7 @@ while True:
     time.sleep(50/1000)
 
 #fadeout on loop break
-if not (groupMaster.mute or group0.mute or group1.mute or group2.mute or group3.mute):
+if not (groupMaster.mute or groups[0].mute or groups[1].mute or groups[2].mute or groups[3].mute):
     pitch = 1.0
     volume = 1.0
     
@@ -123,10 +118,9 @@ if not (groupMaster.mute or group0.mute or group1.mute or group2.mute or group3.
 for sound in sounds:
     sound.release()
     
-group0.release()
-group1.release()
-group2.release()
-group3.release()
+for group in groups:
+    group.release()
+
 groupMaster.release()
 
 system.release()
