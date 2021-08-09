@@ -16,8 +16,8 @@ system.init(maxchannels=16)
 sounds = []
 
 #create sounds for each track
-# os.chdir("B:\Code\ims2\Instrument Tracks")
-os.chdir("C:\\Users\\Jeffery\\projects\\ims2\\Instrument Tracks")
+os.chdir("B:\Code\ims2\Instrument Tracks")
+# os.chdir("C:\\Users\\Jeffery\\projects\\ims2\\Instrument Tracks")
 basepath = os.getcwd()
 
 for entry in os.listdir(basepath):
