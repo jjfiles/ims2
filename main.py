@@ -33,6 +33,7 @@ quads = {
 # TODO:
 # - connect to sounds
 # - percentage comparison should scale off of NUM_QUADS
+# - turn this mf into a class
 
 def imgManip(cap):
     """takes a video capture frame and passes it through filters for easier manipulation
