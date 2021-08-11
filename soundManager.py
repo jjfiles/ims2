@@ -5,11 +5,7 @@ import os
 import time
 
 # TODO
-# - connect to main
-# - add more control methods
 # - decide how to organize sounds
-# - comments and docstrings
-
 
 # create instance -> 
 # assign() -> 
@@ -17,10 +13,14 @@ import time
 # (in while loop instance.system.update() ->
 # time.sleep(0.1)) ->
 # release()
-class soundManager:
+class SoundManager:
     def __init__(self):
+        """initialize fmod settings and local variables
+        """        
+        
         # fmod setup
-        self.system = pyfmodex.system()
+        self.system = pyfmodex.System()
+        self.system.init(maxchannels=16)
         self.sounds = []
         self.groups = []
         self.master = self.system.master_channel_group
@@ -33,6 +33,9 @@ class soundManager:
         os.chdir(self.path)
         
     def assign(self):
+        """create all channels, groups, and sounds
+        """        
+        
         # assign sounds
         for entry in os.listdir(self.path):
             file = os.path.join(self.path, entry)
@@ -49,6 +52,10 @@ class soundManager:
             self.master.add_group(self.groups[i], propagate_dsp_clock=False)
     
     def start(self):
+        """start playing all sounds and set volumes
+        """
+        
+        # ittr through all sounds and start playing
         for idx, sound in enumerate(self.sounds):
             self.system.play_sound(
                 sound,
@@ -58,14 +65,25 @@ class soundManager:
                     else self.groups[3]
             )
 
+        # set volume for each group
         for i in range(4):
             self.groups[i].volume = self.volume
-            
+        
+        # set playing flag
         self.playing = True
             
-    def fadeout(self, group):
+    def groupFadeout(self, group):
+        """fadeout a currently playing group
+
+        Args:
+            group (system.channel_group): a group of sounds
+        """        
+        
+        # if the group is not muted fade volume out over time
         if not group.mute:
-            fadeout_sec = 3
+            group.mute = not group.mute
+            
+            fadeout_sec = 1
             volume = group.volume
         
             for _ in range(10 * fadeout_sec):
@@ -73,15 +91,20 @@ class soundManager:
                 volume -= 1 / (10 * fadeout_sec)
                 
                 self.system.update()
-                time.sleep(0.1)
-            
-            group.mute = not group.mute
-            
-    def fadein(self, group):
+                time.sleep(0.01)
+             
+    def groupFadein(self, group):
+        """fadin a currently muted group
+
+        Args:
+            group (sstem.channel_group): a group of sounds
+        """        
+        
+        # if a group is muted fade the volume in over time
         if group.mute:
             group.mute = not group.mute
 
-            fadein_sec = 3
+            fadein_sec = 1
             volume = group.volume
             
             while group.volume < self.volume:
@@ -89,22 +112,59 @@ class soundManager:
                 volume += 1 / (10 * fadein_sec)
                 
                 self.system.update()
-                time.sleep(0.1)
-            
+                time.sleep(0.01)
         
-    def release(self):
+    def rel(self):
+        """release and destroy all sounds and groups
+        """        
+
+        # release sounds
         for sound in self.sounds:
             sound.release()
         
+        # release groups
         for group in self.groups:
             group.release()
             
+        # release master and system
         self.master.release()
         self.system.release()
     
     def stop(self):
-        for group in self.groups:
-            if not group.mute:
-                self.fadeout(group) 
+        """fadeout all groups then release
+        """    
+    
+        # mute each group to "stop" playback
+        if not self.master.mute:
+            self.groupFadeout(self.master)
         
-        self.release()
+        # release all sounds to terminate session
+        self.rel()
+        
+        self.playing = False
+
+    def incVol(self):
+        """increment all volumes by 0.1
+        """
+        if self.volume <= 1:
+            # set new volume
+            self.volume += 0.1
+            
+            # apply new volume to groups
+            for i in range(4):
+                self.groups[i].volume = self.volume
+            
+    def decVol(self):
+        """decrement all volmes by 0.1
+        """        
+        
+        if self.volume >= 0:
+            # set new volume
+            self.volume -= 0.1
+            
+            # apply new volume to groups
+            for i in range(4):
+                self.groups[i].volume = self.volume
+
+    def toggleMasterMute(self):
+        self.master.mute = not self.master.mute
