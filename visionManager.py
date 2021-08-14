@@ -31,7 +31,6 @@ class VisionManager:
             4: (2, 2, int(h/2), int(w/2)),
             8: (4, 2, int(h/4), int(w/2)),
             16: (4, 4, int(h/4), int(w/4)),
-            32: (8, 8, int(h/8), int(w/8))
         }
         
         # debug flags

@@ -8,7 +8,6 @@ class Timer:
         """        
         self.timer = None
         self.cd = 5
-        self.SHOW = True
         
     def start(self):
         """start timer
@@ -27,11 +26,6 @@ class Timer:
         
         else:
             return False
-
-    def toggleShow(self):
-        """toggle the debug flag
-        """
-        self.SHOW = not self.SHOW
 
     def __del__(self):
         """delete objects

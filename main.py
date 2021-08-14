@@ -3,10 +3,9 @@ from visionManager import VisionManager
 from timer import Timer
 
 import cv2
-import datetime
 
-# TODO
-# - debug for timers
+# global list to manipulate quadrant cooldown timers
+t = []
 
 def initCooldowns(v: VisionManager):
     """initialize a list of cooldowns based off the number of quadrants
@@ -17,16 +16,16 @@ def initCooldowns(v: VisionManager):
     Returns:
         list: list of timer objects
     """   
-    
-    # init empty list 
+
+    global t
     t = []
-    
+   
     # for each quadrant set a new timer 
     for i in range(v.NUM_QUADS):
         i = Timer()
         i.start()
         t.append(i)
-    
+
     return t
 
 def onCooldown(t: Timer):
@@ -90,6 +89,7 @@ def parseCommands(v: VisionManager, s: SoundManager, t: list, cap, k: int):
         v.updateNumQuads(16)
         v.base4d = v.tilify(v.base) 
         t = initCooldowns(v)
+
         
     ## --- SOUND ---
     # group manual fadeouts
@@ -167,6 +167,7 @@ def main():
     s.assign()
     
     # Initialize cooldown timers
+    global t 
     t = initCooldowns(v)
     
     # main loop
@@ -183,10 +184,10 @@ def main():
         
         # show image to screen
         cv2.imshow('IMS2', v.final)
-            
+                
         # update activley audible sounds
         sync(v, s, t)
-        
+
         # wait for keyboard commands
         k = cv2.waitKey(1)
         

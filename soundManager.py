@@ -4,9 +4,6 @@ from pyfmodex.flags import MODE
 import os
 import time
 
-# TODO
-# - decide how to organize sounds
-
 # create instance -> 
 # assign() -> 
 # start() -> 
