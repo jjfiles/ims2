@@ -34,10 +34,10 @@ class VisionManager:
         }
         
         # debug flags
-        self.DEBUG = True
-        self.INFO = True
-        self.OVERLAY = True
-        self.PERCENTAGE = True
+        self.DEBUG = False
+        self.INFO = False
+        self.OVERLAY = False
+        self.PERCENTAGE = False
         
         # color variables
         self.WHITE = (255, 255, 255)

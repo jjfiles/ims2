@@ -4,6 +4,9 @@ from pyfmodex.flags import MODE
 import os
 import time
 
+# TODO
+# - plan how to group sounds (indv?)
+
 # create instance -> 
 # assign() -> 
 # start() -> 

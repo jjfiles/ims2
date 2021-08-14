@@ -3,6 +3,10 @@ from visionManager import VisionManager
 from timer import Timer
 
 import cv2
+import time
+
+# TODO
+# - Show fmod logo so i dont get sued
 
 # global list to manipulate quadrant cooldown timers
 t = []
@@ -157,6 +161,10 @@ def main():
     w = int(cap.get(3))
     h = int(cap.get(4))
     
+    # show fmod logo so no one sues me
+    # i = cv2.imread("Images/FMOD.png", 2)
+    # cv2.imshow("Powered by FMOD", i)
+    
     # Initialize vision manager
     v = VisionManager(h, w)
     v.base = v.imgManip(cap)
@@ -169,6 +177,8 @@ def main():
     # Initialize cooldown timers
     global t 
     t = initCooldowns(v)
+
+    
     
     # main loop
     while True:
