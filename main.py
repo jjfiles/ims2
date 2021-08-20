@@ -7,6 +7,8 @@ import time
 
 # TODO
 # - Show fmod logo so i dont get sued
+# - change sound folder on command
+# - then restart sound system?
 
 # global list to manipulate quadrant cooldown timers
 t = []

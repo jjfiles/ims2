@@ -38,6 +38,10 @@ If you try to run this program and start running into errors regarding the fmod 
 
 I am activley looking to make a PR to the pyfmodex repo to get this fix in.
 
+## Music
+
+As of right now you need to add 16 music files into the `Instrument Tracks` directory
+
 ## Python
 
 Start with your favorite virtual environment in your prefered CL

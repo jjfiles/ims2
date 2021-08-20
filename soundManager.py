@@ -5,7 +5,7 @@ import os
 import time
 
 # TODO
-# - plan how to group sounds (indv?)
+# - change assign to folder based system
 
 # create instance -> 
 # assign() -> 
@@ -16,7 +16,7 @@ import time
 class SoundManager:
     def __init__(self):
         """initialize fmod settings and local variables
-        """        
+        """
         
         # fmod setup
         self.system = pyfmodex.System()
@@ -34,7 +34,7 @@ class SoundManager:
         
     def assign(self):
         """create all channels, groups, and sounds
-        """        
+        """
         
         # assign sounds
         for entry in os.listdir(self.path):
