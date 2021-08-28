@@ -3,7 +3,6 @@ from visionManager import VisionManager
 from timer import Timer
 
 import cv2
-import time
 
 # TODO
 # - Show fmod logo so i dont get sued
@@ -13,12 +12,11 @@ import time
 # global list to manipulate quadrant cooldown timers
 t = []
 
-def initCooldowns(v: VisionManager):
+def initCooldowns(quads: int):
     """initialize a list of cooldowns based off the number of quadrants
 
     Args:
-        v (VisionManager): instance of the vision system
-
+        quads (int): number of timers to intialize
     Returns:
         list: list of timer objects
     """   
@@ -27,7 +25,7 @@ def initCooldowns(v: VisionManager):
     t = []
    
     # for each quadrant set a new timer 
-    for i in range(v.NUM_QUADS):
+    for i in range(quads):
         i = Timer()
         i.start()
         t.append(i)
@@ -53,7 +51,7 @@ def onCooldown(t: Timer):
     else:    
         return False
 
-def parseCommands(v: VisionManager, s: SoundManager, t: list, cap, k: int):
+def parseCommands(v: VisionManager, s: SoundManager, cap, k: int):
     """parse non-exit keyboard commands
 
     Args:
@@ -62,6 +60,7 @@ def parseCommands(v: VisionManager, s: SoundManager, t: list, cap, k: int):
         cap (cv2 video frame): frame from cv2 video capture
         k (int): keycode sent this loop
     """
+    global t
     
     ## --- VISION ---
     # debug commands
@@ -80,44 +79,41 @@ def parseCommands(v: VisionManager, s: SoundManager, t: list, cap, k: int):
     
     # change number of quadrants
     elif k == ord('1'):
+        # update number of quadrants in VisionManager
         v.updateNumQuads(2)
+        # retile the base image based on the new number of quadrants
         v.base4d = v.tilify(v.base)
-        t = initCooldowns(v)
+        # stop the SoundManger
+        s.stop()
+        # restart SoundManager
+        SoundManager.__init__(s)
+        # assign new sounds
+        s.assign(v.NUM_QUADS)
+        # initialize new cooldowns
+        t = initCooldowns(v.NUM_QUADS)
     elif k == ord('2'):
         v.updateNumQuads(4)
         v.base4d = v.tilify(v.base) 
-        t = initCooldowns(v)
+        s.stop()
+        SoundManager.__init__(s)
+        s.assign(v.NUM_QUADS)
+        t = initCooldowns(v.NUM_QUADS)
     elif k == ord('3'): 
         v.updateNumQuads(8)
         v.base4d = v.tilify(v.base) 
-        t = initCooldowns(v)
+        s.stop()
+        SoundManager.__init__(s)
+        s.assign(v.NUM_QUADS)
+        t = initCooldowns(v.NUM_QUADS)
     elif k == ord('4'): 
         v.updateNumQuads(16)
         v.base4d = v.tilify(v.base) 
-        t = initCooldowns(v)
+        s.stop()
+        SoundManager.__init__(s)
+        s.assign(v.NUM_QUADS)
+        t = initCooldowns(v.NUM_QUADS)
 
-        
     ## --- SOUND ---
-    # group manual fadeouts
-    elif k == ord('z'):
-        s.groupFadeout(s.groups[0])
-    elif k == ord('x'):
-        s.groupFadeout(s.groups[1])
-    elif k == ord('c'):
-        s.groupFadeout(s.groups[2])
-    elif k == ord('v'):
-        s.groupFadeout(s.groups[3])
-    
-    # group manual fadeins
-    elif k == ord('a'):
-        s.groupFadeout(s.groups[0])
-    elif k == ord('s'):
-        s.groupFadeout(s.groups[1])
-    elif k == ord('d'):
-        s.groupFadeout(s.groups[2])
-    elif k == ord('f'):
-        s.groupFadeout(s.groups[3])
-    
     # volume controls
     elif k == ord('='):
         s.incVol()
@@ -129,7 +125,7 @@ def parseCommands(v: VisionManager, s: SoundManager, t: list, cap, k: int):
     # playback controls
     elif k == ord(" "):
         if not s.playing:
-            s.start()
+            s.start(v.NUM_QUADS)
 
 def sync(v: VisionManager, s: SoundManager, t: list):
     """syncs the vision, sound, and timer systems
@@ -174,14 +170,12 @@ def main():
     
     # Initialize sound manager
     s = SoundManager()
-    s.assign()
+    s.assign(v.NUM_QUADS)
     
     # Initialize cooldown timers
     global t 
-    t = initCooldowns(v)
+    t = initCooldowns(v.NUM_QUADS)
 
-    
-    
     # main loop
     while True:
         
@@ -206,7 +200,7 @@ def main():
         if k == 13:
             break
         else:
-            parseCommands(v, s, t, cap, k)
+            parseCommands(v, s, cap, k)
     
         # update sound system
         s.system.update()

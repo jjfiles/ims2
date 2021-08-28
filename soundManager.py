@@ -4,9 +4,6 @@ from pyfmodex.flags import MODE
 import os
 import time
 
-# TODO
-# - change assign to folder based system
-
 # create instance -> 
 # assign() -> 
 # start() -> 
@@ -28,14 +25,23 @@ class SoundManager:
         self.playing = False
         
         # path setup
-        base = os.getcwd()
-        self.path = os.path.join(base, "Instrument Tracks")
+        self.base = os.getcwd()
+        self.path = os.path.join(self.base, "Instrument Tracks")
+
+        # set current directory to base path
         os.chdir(self.path)
         
-    def assign(self):
-        """create all channels, groups, and sounds
-        """
+    def assign(self, quads: int):
+        """assign sounds to groups based of number of quadrants
+
+        Args:
+            quads (int): number of quandrants to assign
+        """        
         
+        # change to appropriate sound folder
+        self.path = os.path.join(self.path, f"{quads}")
+        os.chdir(self.path)
+    
         # assign sounds
         for entry in os.listdir(self.path):
             file = os.path.join(self.path, entry)
@@ -47,26 +53,26 @@ class SoundManager:
             )
         
         # assign base groups and master 
-        for i in range(4):
+        for i in range(quads):
             self.groups.append(self.system.create_channel_group(f"Group {i}"))
             self.master.add_group(self.groups[i], propagate_dsp_clock=False)
     
-    def start(self):
-        """start playing all sounds and set volumes
-        """
+    def start(self, quads: int):
+        """start each group of sounds
+
+        Args:
+            quads (int): number of quadrants to itterate over
+        """        
         
         # ittr through all sounds and start playing
         for idx, sound in enumerate(self.sounds):
             self.system.play_sound(
                 sound,
-                channel_group=self.groups[0] if idx <3
-                    else self.groups[1] if (idx > 3 and idx < 7)
-                    else self.groups[2] if (idx > 7 and idx < 11)
-                    else self.groups[3]
+                channel_group=self.groups[idx]
             )
 
         # set volume for each group
-        for i in range(4):
+        for i in range(quads):
             self.groups[i].volume = self.volume
         
         # set playing flag
@@ -127,7 +133,7 @@ class SoundManager:
             group.release()
             
         # release master and system
-        self.master.release()
+        # self.master.release()
         self.system.release()
     
     def stop(self):
@@ -141,7 +147,13 @@ class SoundManager:
         # release all sounds to terminate session
         self.rel()
         
+        # set playing flag back to false
         self.playing = False
+        
+        # move back to main directory
+        print(f"{os.getcwd()}")
+        os.chdir("../..")
+        print(f"{os.getcwd()}")
 
     def incVol(self):
         """increment all volumes by 0.1

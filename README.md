@@ -40,7 +40,10 @@ I am activley looking to make a PR to the pyfmodex repo to get this fix in.
 
 ## Music
 
-As of right now you need to add 16 music files into the `Instrument Tracks` directory
+For each of the four folders in `Instrument Tracks` you should fill it with that number of sound files i.e. `Instrument Tracks\4` should have four sound files in it.
+
+The sounds are loaded into quadrants top to bottom, left to right so order the files in a way that sorts them the way you want them to be loaded.
+
 
 ## Python
 
@@ -72,7 +75,7 @@ Run IMS
 | key  | action  |
 |---|---|
 | VISION CONTROLS | |
-| [enter] | quit program |
+| Enter | quit program |
 | d  | toggle all debug info |
 | i | toggle quadrant on/off info |
 | o | toggle On/Off text display |
@@ -82,16 +85,7 @@ Run IMS
 | 2 | set number of quadrants to 4|
 | 3 | set number of quadrants to 8|
 | 4 | set number of quadrants to 16|
-| 5 | set number of quadrants to 32|
 | SOUND CONTROLS | |
-| z | Manual off first group |
-| x | Manual off second group |
-| c | Manual off thrid group |
-| v | Manual off fourth group |
-| a | Manual on first group |
-| s | Manual on second group |
-| d | Manual on third group |
-| f | Manual on fourth group |
 | = | Volume up |
 | - | Volume down |
-| [sapce] | start playback |
+| Space | start playback |
