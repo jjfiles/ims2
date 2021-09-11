@@ -1,9 +1,6 @@
 import cv2
 import numpy as np
 
-# TODO
-# - percentage comparison should scale of NUM_QUADS
-
 class VisionManager:
     def __init__(self, h: int, w: int):
         """initialize variables, flags, and the uad dictionary
@@ -53,7 +50,7 @@ class VisionManager:
         """
         
         # read frame data
-        _, img = cap.read()
+        _, img = cap.read() 
         
         # gray scale -> blur -> canny -> threshold pass
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -104,10 +101,12 @@ class VisionManager:
 
         Returns:
             np.ndarray: bool for each quadrant denoting if it was over the given trigger percentage
+            np.ndarray: float percentage for each quadrant
         """
         
         # empty np array and counter to keep track of the comparison bools
         info = np.empty((self.NUM_QUADS))
+        percentages = np.empty((self.NUM_QUADS))
         qc = 0
         
         # ittr through tiled old frame and tiled current frame
@@ -124,16 +123,18 @@ class VisionManager:
                 # add bool to info array
                 if percent > self.DIFF:
                     info[qc] = True
+                    percentages[qc] = percent
                     qc += 1
                 else:
                     info[qc] = False
+                    percentages[qc] = percent
                     qc += 1
         
         # debug output bool array
         if self.DEBUG and self.INFO:
             print(f'quad info: {info}')
         
-        return info
+        return info, percentages
     
     def drawRect(self, image: np.ndarray, info: np.ndarray):
         """draw rectangles over each quadrant
@@ -232,11 +233,13 @@ class VisionManager:
         Args:
             cap (np.ndarray): frame data from cv2 video capture
         """        
-        self.base = imgManip(cap)
+        self.base = self.imgManip(cap)
         print(f'reset base image')
         
     def updateNumQuads(self, n: int):
         if n in self.quads:
             self.NUM_QUADS = n
 
+    def setDiff(self, diff):
+        self.DIFF = diff
     

@@ -151,9 +151,7 @@ class SoundManager:
         self.playing = False
         
         # move back to main directory
-        print(f"{os.getcwd()}")
         os.chdir("../..")
-        print(f"{os.getcwd()}")
 
     def incVol(self):
         """increment all volumes by 0.1

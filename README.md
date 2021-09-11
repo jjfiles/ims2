@@ -6,7 +6,7 @@ Everything shown will be for windows. Mac and Linux will be similar
 
 ## FMOD Engine
 
-![fmod logo](Images/FMOD%20Logo.png)
+![fmod logo](Images/FMOD.png)
 
 Firstly, to run you'll need the FMOD Engine Library [here](https://www.fmod.com/download#fmodstudiosuite).
 
