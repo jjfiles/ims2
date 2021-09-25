@@ -28,13 +28,13 @@ Once you've insalled the engine you'll need to add it to your path.
 
 #### The Unfun Part
 
-As of the last update of this readme (August 11th, 2021) the pyfmodex library (ver. 0.7.0) is not working on the windows (or maybe it's just for me :C)
+As of the last update of this readme (September 25th, 2021) the pyfmodex library (ver. 0.7.0) is not working on the windows (or maybe it's just for me :C)
 
 If you try to run this program and start running into errors regarding the fmod module not beign found, follow these steps:
 
 - go to your pyfmodex installation
   - `venv\Lib\site-packages\pyfmodex\fmodex.py`
-  - Replace line 6 `_dll = windll.fmod` with `_dll = WinDll(os.getenv('fmod'))`
+  - Replace line 6 `_dll = windll.fmod` with `_dll = WinDLL(os.getenv('fmod'))`
 
 I am activley looking to make a PR to the pyfmodex repo to get this fix in.
 
