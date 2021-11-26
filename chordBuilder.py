@@ -23,5 +23,6 @@ class chordBuilder:
         
         self.selectedChord = None
         self.notes = None
-        
-        
+       
+    def assign(self):
+        pass
