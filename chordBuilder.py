@@ -26,3 +26,20 @@ class chordBuilder:
        
     def assign(self):
         pass
+    
+    def start(self):
+        pass
+    
+    def stop(self):
+        pass
+    
+    def incVol(self):
+        pass
+    
+    def decVol(self):
+        pass
+    
+    def toggleMute(self):
+        pass
+
+    
