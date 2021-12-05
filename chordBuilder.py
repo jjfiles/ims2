@@ -25,6 +25,11 @@ class chordBuilder:
         self.notes = None
        
     def assign(self):
+        """
+        os.chdir(chords["chord i wanna select"])
+        for quad in chord:
+            
+        """
         pass
     
     def start(self):
